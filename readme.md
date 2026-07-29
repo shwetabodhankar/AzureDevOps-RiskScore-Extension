@@ -37,8 +37,8 @@ Examples:
 
 Create these Azure DevOps custom fields and add them to the target work item types:
 
-- Custom.RiskLikelihood, Integer, allowed values 1 through 5
-- Custom.RiskImpact, Integer, allowed values 1 through 3
+- Custom.RiskLikelihood, Picklist (Integer), allowed values 1 through 5
+- Custom.RiskImpact, Picklist (Integer), allowed values 1 through 3
 - Custom.RiskScore, Integer, calculated values 1 through 15
 
 ## Configuration
