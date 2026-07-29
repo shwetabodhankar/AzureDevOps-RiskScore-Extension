@@ -60,7 +60,11 @@ You can change mappings from Organization settings > Risk Score hub. The hub sto
 - Uses loop guards to avoid recursive field-change update loops.
 - Keeps Risk Score read-only from extension logic where supported.
 
-## Local build
+## Build and packaging workflow
+
+### 1. Local build and test
+
+Compile and test the TypeScript code:
 
 ```bash
 npm install
@@ -69,43 +73,68 @@ npm run lint
 npm test
 ```
 
-## Packaging and installation
+### 2. Create VSIX package
 
-Create a VSIX package:
+Package the extension into a VSIX file using tfx:
 
 ```bash
 npm run package
 ```
 
-Environment-specific package files:
+This creates a `.vsix` file that contains the compiled extension.
+
+For environment-specific packages:
 
 ```bash
 npm run package:dev
 npm run package:test
 ```
 
-Then install the generated VSIX into your Azure DevOps organization from Organization settings > Extensions > Manage extensions.
+### 3. Installation
 
-## Publish directly to Marketplace
+Install the generated VSIX package into your Azure DevOps organization.
 
-1. Set your publisher in azure-devops-extension.json:
+**Web UI Installation** (if available):
 
-- publisher: your Marketplace publisher ID
+Navigate to Organization settings > Extensions > Manage extensions and upload the VSIX file.
 
-2. Create a Personal Access Token with Marketplace manage scope and export it as AZDO_PAT.
+**Command-line installation with tfx** (recommended):
 
-3. Publish:
+To install from the command line without using the web UI:
+
+```bash
+npx tfx extension install --vsix <vsix-filename> --service-url https://dev.azure.com/<organization> --token <PAT>
+```
+
+Example:
+
+```bash
+npx tfx extension install --vsix sbodhankar-devtools.risk-score-extension-1.0.0.vsix --service-url https://dev.azure.com/contososhwetaadmin --token "YOUR_PAT_TOKEN_HERE"
+```
+
+**Parameters:**
+- `--vsix`: Path to the generated VSIX file (from step 2)
+- `--service-url`: Your Azure DevOps organization URL
+- `--token`: Personal Access Token with "Extension Management" scope
+
+**Note:** Create a PAT with "Extension Management" scope to allow installation.
+
+## Publishing to Marketplace
+
+After packaging the extension (step 2 above), you can publish to the Azure DevOps Marketplace:
+
+1. Set your publisher ID in `azure-devops-extension.json`
+
+2. Create a Personal Access Token with "Marketplace manage" scope and export it as `AZDO_PAT`
+
+3. Publish using npm:
 
 ```bash
 npm run publish:dev
 npm run publish:test
 ```
 
-The publish helper script is scripts/publish.ps1 and supports:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ./scripts/publish.ps1 -Environment public -Token <PAT>
-```
+**Note:** This extension has already been manually built and published to the Azure DevOps Marketplace. The above commands are for future updates.
 
 ## Add control to a work-item form
 
