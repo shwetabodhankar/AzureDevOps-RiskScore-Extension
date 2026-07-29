@@ -1,0 +1,22 @@
+{
+  "name": "azure-devops-risk-score-extension",
+  "version": "1.0.0",
+  "devDependencies": {
+    "tfx-cli": "^0.21.1",
+    "typescript": "^5.9.2"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "lint": "tsc -p . --noEmit",
+    "test": "tsc -p tsconfig.test.json && node tests/riskScoreCalculator.test.js",
+    "build:release": "tsc -p .",
+    "package": "tfx extension create --manifest-globs azure-devops-extension.json",
+    "package:dev": "tfx extension create --manifest-globs azure-devops-extension.json configs/dev.json",
+    "package:test": "tfx extension create --manifest-globs azure-devops-extension.json configs/test.json",
+    "publish:dev": "powershell -ExecutionPolicy Bypass -File ./scripts/publish.ps1 -Environment dev",
+    "publish:test": "powershell -ExecutionPolicy Bypass -File ./scripts/publish.ps1 -Environment test"
+  },
+  "dependencies": {
+    "vss-web-extension-sdk": "^5.141.0"
+  }
+}

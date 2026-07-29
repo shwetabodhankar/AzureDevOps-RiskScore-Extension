@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "jsx": "react",
+        "rootDir": "src",
+        "outDir": "dist",
+        "lib": ["es2015", "dom"],
+        "target": "es5",
+        "ignoreDeprecations": "5.0",
+        "types": [
+            "vss-web-extension-sdk"
+        ],
+        "strict": false,
+        "skipLibCheck": true
+    },   
+    "include": [
+        "src/**/*.tsx",
+        "src/**/*.ts"
+    ],
+    "exclude": ["node_modules/**/*"]    
+}

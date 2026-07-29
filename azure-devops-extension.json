@@ -1,0 +1,115 @@
+{
+  "public": false,
+  "manifestVersion": 1,
+  "id": "risk-score-extension",
+  "publisher": "sbodhankar-devtools",
+  "version": "1.0.0",
+  "name": "Risk Score (Likelihood x Impact)",
+  "description": "Automatically calculates Risk Score for Azure DevOps work items and stores the result in a custom field.",
+  "categories": [
+    "Azure Boards"
+  ],
+  "tags": [
+    "Risk",
+    "Score"
+  ],
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "risk-score-work-item-form-observer",
+      "type": "ms.vss-work-web.work-item-notifications",
+      "description": "Update the Risk Score field when Likelihood or Impact values change.",
+      "targets": [
+        "ms.vss-work-web.work-item-form"
+      ],
+      "properties": {
+        "uri": "riskScore.html"
+      }
+    },
+    {
+      "id": "risk-score-settings-hub",
+      "type": "ms.vss-web.hub",
+      "description": "Collection-level settings for Risk Score field mapping.",
+      "targets": [
+        "ms.vss-web.collection-admin-hub-group"
+      ],
+      "properties": {
+        "name": "Risk Score",
+        "uri": "riskScoreSettings.html"
+      }
+    },
+    {
+      "id": "risk-score-context-menu",
+      "type": "ms.vss-web.action",
+      "description": "Recalculate Risk Score for selected work items.",
+      "targets": [
+        "ms.vss-work-web.work-item-context-menu"
+      ],
+      "properties": {
+        "text": "Recalculate Risk Scores",
+        "title": "Update Risk Score for the selected work items",
+        "icon": "images/icon-refresh.png",
+        "groupId": "Risk",
+        "uri": "riskScore.html"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "css",
+      "addressable": true
+    },
+    {
+      "path": "marketplace",
+      "addressable": true
+    },
+    {
+      "path": "images",
+      "addressable": true
+    },
+    {
+      "path": "dist",
+      "addressable": true,
+      "packagePath": "scripts"
+    },
+    {
+      "path": "riskScore.html",
+      "addressable": true
+    },
+    {
+      "path": "riskScoreSettings.html",
+      "addressable": true
+    },
+    {
+      "path": "node_modules/vss-web-extension-sdk/lib",
+      "addressable": true,
+      "packagePath": "lib"
+    }
+  ],
+  "scopes": [
+    "vso.work",
+    "vso.work_write"
+  ],
+  "icons": {
+    "default": "images/logo.png"
+  },
+  "content": {
+    "details": {
+      "path": "marketplace/details.md"
+    },
+    "license": {
+      "path": "LICENSE"
+    }
+  },
+  "branding": {
+    "color": "rgb(220, 235, 252)",
+    "theme": "light"
+  },
+  "demands": [
+    "api-version/3.0"
+  ]
+}
