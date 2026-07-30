@@ -176,3 +176,86 @@ The calculator logic is tested independently in `tests/riskScoreCalculator.test.
 ```bash
 npm test
 ```
+
+---
+
+## Frequently Asked Questions
+
+### Technical / Architecture
+
+**Q: Why are there HTML files if this is TypeScript?**
+Azure DevOps extensions need HTML entry points loaded in iframes — the HTML bootstraps the SDK and loads the compiled JS.
+
+**Q: Where does the compiled JavaScript go?**
+TypeScript compiles to a `scripts/` folder, then gets packaged into the VSIX file.
+
+**Q: What is the VSS SDK?**
+Visual Studio Services SDK — Microsoft's library for Azure DevOps extensions to communicate with the host platform.
+
+**Q: Why does `riskScore.html` have no visible UI?**
+It's an invisible background observer — it just hooks into work item form events.
+
+---
+
+### Fields & Configuration
+
+**Q: Do we have to use `Custom.RiskLikelihood` exactly?**
+No — admins can remap field names from the Settings hub without touching code.
+
+**Q: Why is Risk Score read-only on the form?**
+To prevent manual overrides — the extension controls the value based on Likelihood × Impact.
+
+**Q: What happens if a field doesn't exist on the work item type?**
+The calculation won't run — the fields must be added to each work item type first.
+
+**Q: Can we add more Likelihood or Impact values beyond 1–5 and 1–3?**
+Not without a code change in `riskScoreCalculator.ts` to update the validation ranges.
+
+---
+
+### Installation & Deployment
+
+**Q: Do we need to publish to the public Marketplace or can it be private?**
+It can be published as a **private** extension visible only to your Azure DevOps organization.
+
+**Q: What PAT scopes are needed to install?**
+- **Extension Management** scope for installation via tfx
+- **Marketplace Manage** scope for publishing to the Marketplace
+
+**Q: Can this be installed on Azure DevOps Server (on-premises)?**
+It uses cloud-specific APIs — on-premises support would need testing and may require adjustments.
+
+**Q: What if the UI install fails?**
+Use the tfx command-line install as documented in the README:
+```bash
+npx tfx extension install --vsix <vsix-filename> --service-url https://dev.azure.com/<organization> --token <PAT>
+```
+
+---
+
+### Runtime Behaviour
+
+**Q: Does it recalculate when you reopen a saved work item?**
+Yes — it runs on load and recalculates based on the stored field values.
+
+**Q: What prevents an infinite loop when writing the score back?**
+The `isUpdatingRiskScore` flag guards against recursive field-change events triggered by the extension's own writes.
+
+**Q: What if someone manually types in the Risk Score field?**
+The extension marks it read-only on the form, so direct edits are blocked.
+
+**Q: Does it work from the backlog/board grid view or only inside the work item form?**
+Both — there is a grid mode that uses the REST API for updates from the backlog view.
+
+---
+
+### Testing & Extensibility
+
+**Q: How is it tested?**
+The calculator logic has unit tests in `tests/riskScoreCalculator.test.js` run with `npm test`. The pure calculator has no SDK dependencies making it easy to test in isolation.
+
+**Q: Can we add more fields (e.g., a Severity field)?**
+Yes, but it would require code changes to `riskScoreCalculator.ts`, `riskScoreConfig.ts`, `riskScoreModels.tsx`, and `riskScore.tsx`.
+
+**Q: Can we change the formula from multiplication to something else?**
+Yes — only `riskScoreCalculator.ts` needs to be modified since all calculation logic is isolated there.
